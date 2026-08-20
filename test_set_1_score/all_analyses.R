@@ -202,17 +202,6 @@ dis_clustering <- cmp %>%
   summarise(n_dis = sum(!agree), .groups = "drop") %>%
   count(n_dis)
 
-#### Sensitivity analysis ####
-
-# Pilot-test papers: four audited papers (G4mp, L22B, qg47, Pxp7) were used
-# for pilot testing, and the reproduction plan's worked examples
-# inadvertently reference materials from them. The SI reports agreement
-# excluding all claims from these papers.
-sens_plan_papers <- c("G4mp", "L22B", "qg47", "Pxp7")
-
-sens_d <- cmp %>% filter(!paper_id %in% sens_plan_papers)
-sens_b <- list(agree = sum(sens_d$agree), n = nrow(sens_d))
-
 #### Summary ####
 
 # Assemble the whole summary as one character vector and emit it with a
@@ -264,11 +253,6 @@ summary_report <- c(
   "",
   "  disagreements per paper (papers x count):",
   capture.output(print(as.data.frame(dis_clustering), row.names = FALSE)),
-  "",
-  "Sensitivity analysis (claim-level agreement):",
-  sprintf("  excluding pilot-test papers (%s): %d/%d = %.1f%%",
-          paste(sens_plan_papers, collapse = ", "),
-          sens_b$agree, sens_b$n, 100 * sens_b$agree / sens_b$n),
   ""
 )
 writeLines(summary_report)
