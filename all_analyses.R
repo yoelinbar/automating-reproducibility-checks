@@ -214,6 +214,26 @@ dis_clustering <- cmp %>%
   summarise(n_dis = sum(!agree), .groups = "drop") %>%
   count(n_dis)
 
+#### Sensitivity analyses ####
+
+# (a) Extraction-anchored claims: papers where the authors' data could not
+# be obtained (7ybJ, EQxa) or the paper printed no directly comparable
+# statistic (1574), so the LLM verdict was validated against the SCORE
+# extraction's derived values rather than paper-printed numbers.
+sens_extraction_papers <- c("1574", "7ybJ", "EQxa")
+
+# (b) Plan-example papers: the reproduction plan's worked examples reference
+# materials from these audited papers.
+sens_plan_papers <- c("G4mp", "L22B", "qg47", "Pxp7")
+
+sens_agree <- function(excl) {
+  d <- cmp %>% filter(!paper_id %in% excl)
+  list(agree = sum(d$agree), n = nrow(d), papers = n_distinct(d$paper_id))
+}
+sens_a  <- sens_agree(sens_extraction_papers)
+sens_b  <- sens_agree(sens_plan_papers)
+sens_ab <- sens_agree(c(sens_extraction_papers, sens_plan_papers))
+
 # Single-claim papers are exactly SCORE's single-trace audits; their
 # disagreements and adjudicated attribution are reported in the SI.
 single_ids      <- paper_level$paper_id[paper_level$n_claims == 1]
@@ -281,6 +301,16 @@ summary_report <- c(
           n_single, n_single_trace, single_agree, n_single, 100 * single_agree / n_single),
   sprintf("  their disagreements, adjudicated: %s",
           paste(sprintf("%s %d", single_dis_attr$errors_in, single_dis_attr$n), collapse = ", ")),
+  "",
+  "Sensitivity analyses (claim-level agreement):",
+  sprintf("  excluding extraction-anchored papers (%s): %d/%d = %.1f%%",
+          paste(sens_extraction_papers, collapse = ", "),
+          sens_a$agree, sens_a$n, 100 * sens_a$agree / sens_a$n),
+  sprintf("  excluding plan-example papers (%s): %d/%d = %.1f%%",
+          paste(sens_plan_papers, collapse = ", "),
+          sens_b$agree, sens_b$n, 100 * sens_b$agree / sens_b$n),
+  sprintf("  excluding both sets: %d/%d = %.1f%%",
+          sens_ab$agree, sens_ab$n, 100 * sens_ab$agree / sens_ab$n),
   ""
 )
 writeLines(summary_report)
