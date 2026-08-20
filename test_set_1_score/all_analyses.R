@@ -166,9 +166,6 @@ sankey_counts <- tibble(
 
 #### Paper-level analysis ####
 
-# Claims are nested within papers, and verdict errors are typically
-# paper-level events (one coding error propagates to every claim it
-# touches), so papers -- not claims -- are the natural unit of independence.
 paper_level <- cmp %>%
   group_by(paper_id) %>%
   summarise(n_claims        = n(),
