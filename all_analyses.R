@@ -199,16 +199,7 @@ boot_paper <- replicate(B, {
 })
 ci_paper <- quantile(boot_paper, c(.025, .975))
 
-# Decomposition of the claim-level vs paper-level gap: single- vs
-# multi-claim papers, and the within-paper clustering of disagreements.
-size_split <- paper_level %>%
-  mutate(size = if_else(n_claims == 1, "1 claim", "2+ claims")) %>%
-  group_by(size) %>%
-  summarise(papers           = n(),
-            claims           = sum(n_claims),
-            paper_mean_agree = mean(agree_rate),
-            claim_agree      = sum(agree_rate * n_claims) / sum(n_claims),
-            .groups = "drop")
+# Within-paper clustering of disagreements (papers x disagreement count).
 dis_clustering <- cmp %>%
   group_by(paper_id) %>%
   summarise(n_dis = sum(!agree), .groups = "drop") %>%
@@ -224,16 +215,6 @@ sens_plan_papers <- c("G4mp", "L22B", "qg47", "Pxp7")
 
 sens_d <- cmp %>% filter(!paper_id %in% sens_plan_papers)
 sens_b <- list(agree = sum(sens_d$agree), n = nrow(sens_d))
-
-# Single-claim papers are exactly SCORE's single-trace audits; their
-# disagreements and adjudicated attribution are reported in the SI.
-single_ids      <- paper_level$paper_id[paper_level$n_claims == 1]
-n_single_trace  <- sum(grepl("single-trace", cmp$claim_id[cmp$paper_id %in% single_ids]))
-single_agree    <- sum(paper_level$agree_rate[paper_level$n_claims == 1] == 1)
-single_dis_attr <- disagree %>%
-  filter(paper_id %in% single_ids) %>%
-  count(errors_in) %>%
-  complete(errors_in = c("SCORE", "Neither", "LLM", "Both"), fill = list(n = 0L))
 
 #### Summary ####
 
@@ -284,14 +265,8 @@ summary_report <- c(
           100 * mean(paper_level$miske_precise),   100 * mean(cmp$miske == "precise"),
           100 * mean(paper_level$miske_approx_up), 100 * mean(cmp$miske %in% c("precise", "approximate"))),
   "",
-  "  gap decomposition - single- vs multi-claim papers:",
-  capture.output(print(as.data.frame(size_split), row.names = FALSE)),
   "  disagreements per paper (papers x count):",
   capture.output(print(as.data.frame(dis_clustering), row.names = FALSE)),
-  sprintf("  single-claim papers: %d (%d of them single-trace audits); perfect agreement %d/%d (%.1f%%)",
-          n_single, n_single_trace, single_agree, n_single, 100 * single_agree / n_single),
-  sprintf("  their disagreements, adjudicated: %s",
-          paste(sprintf("%s %d", single_dis_attr$errors_in, single_dis_attr$n), collapse = ", ")),
   "",
   "Sensitivity analysis (claim-level agreement):",
   sprintf("  excluding pilot-test papers (%s): %d/%d = %.1f%%",

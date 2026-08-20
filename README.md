@@ -68,9 +68,8 @@ LLM / Both) and tallied into the four-way attribution that drives Figure 1.
 **4. Paper-level analysis** — per-paper agreement and verdict rates (equal
 weight per paper), a paper-clustered bootstrap 95% CI on the claim-level
 agreement rate (resampling the 73 papers with replacement, B = 10,000,
-percentile intervals, seed 20260819), and the decomposition of the
-claim-level vs paper-level gap (single- vs multi-claim papers; within-paper
-clustering of disagreements).
+percentile intervals, seed 20260819), and the
+within-paper clustering of disagreements.
 
 ## Configuration
 
