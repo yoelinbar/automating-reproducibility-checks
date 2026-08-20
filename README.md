@@ -2,7 +2,7 @@
 
 Reproduces every headline statistic, Table 1, and Figure 1 in "Automating Reproducibility Checks Using Large Language Models" 
 from Miske et al.'s deposited data, the LLM
-analyst's per-claim verdicts, and the human disagreement adjudication. All inputs are under `data/`.
+analyst's per-claim verdicts, and the human disagreement adjudication. All inputs are under `Data/`.
 
 ## Requirements
 
@@ -35,7 +35,7 @@ results in the environment as data frames:
 | `paper_level` | per-paper agreement and verdict rates (73 papers) |
 | `ci_claim`, `ci_paper` | paper-clustered bootstrap 95% CIs (B = 10,000, seed 20260819) |
 
-The script writes out `sankey_counts.csv` (in this folder), because
+The script writes out `Data/sankey_counts.csv`, because
 the figure script needs it. Nothing else is written to disk.
 
 Then build the figure (Python, reads that one file):
@@ -62,7 +62,7 @@ retrieved) gives the audit pool of **73 papers / 340 claims**.
 value kept in `miske_raw`).
 
 **3. Joins the human adjudication** — the 47 disagreements are joined to the
-`Errors in` column of `data/adjudicated_disagreements.csv` (SCORE / Neither /
+`Errors in` column of `Data/adjudicated_disagreements.csv` (SCORE / Neither /
 LLM / Both) and tallied into the four-way attribution that drives Figure 1.
 
 **4. Paper-level analysis** — per-paper agreement and verdict rates (equal
@@ -81,7 +81,7 @@ this folder).
 ## Data provenance
 
 ```
-data/
+Data/
   miske/                            redistributed verbatim from the SCORE /
     analysis_ready/{paper_metadata,pr_outcomes,repro_outcomes}.csv
     raw_data/repro_vor.csv          Miske et al. (2026) public deposit
@@ -89,4 +89,4 @@ data/
   adjudicated_disagreements.csv     human "Errors in" coding (this work)
 ```
 
-See `data/SOURCE.md` for full data provenance.
+See `Data/SOURCE.md` for full data provenance.

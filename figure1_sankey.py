@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """Figure 1A — Sankey-style breakdown of attempted reproducibility claims.
 
-Counts are read from sankey_counts.csv in data/ (written by all_analyses.R); nothing here is hard-coded, so the figure always matches the
+Counts are read from Data/sankey_counts.csv (written by all_analyses.R); nothing here is hard-coded, so the figure always matches the
 stats. Run all_analyses.R first, then: python figure1_sankey.py
 
 Renders only the diagram; the figure number, title, and explanatory note are
@@ -14,7 +14,7 @@ import matplotlib.patches as patches
 from matplotlib.path import Path
 
 _HERE = os.path.dirname(os.path.abspath(__file__))
-_COUNTS = os.path.join(_HERE, "data/sankey_counts.csv")
+_COUNTS = os.path.join(_HERE, "Data/sankey_counts.csv")
 if not os.path.exists(_COUNTS):
     raise SystemExit(
         "sankey_counts.csv not found. Run all_analyses.R first.")

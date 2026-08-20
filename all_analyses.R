@@ -3,7 +3,7 @@
 # attribution, and every headline statistic + Table 1 reported in the
 # manuscript
 #
-# Nothing is written to disk except output/sankey_counts.csv, which the
+# Nothing is written to disk except Data/sankey_counts.csv, which the
 # Python figure script (figure1_sankey.py) reads. All results stay in the
 # environment as data frames you can inspect / View():
 #
@@ -34,10 +34,10 @@ library(tidyr)
 
 #### Configuration (edit if your layout differs) ####
 
-miske_dir    <- "data/miske"
-llm_summary  <- "data/llm_analyst/summary.csv"
-adjudication <- "data/adjudicated_disagreements.csv"
-sankey_out   <- "data/sankey_counts.csv"   # the only file written
+miske_dir    <- "Data/miske"
+llm_summary  <- "Data/llm_analyst/summary.csv"
+adjudication <- "Data/adjudicated_disagreements.csv"
+sankey_out   <- "Data/sankey_counts.csv"   # the only file written
 
 if (!dir.exists(miske_dir)) {
   stop("Cannot find '", miske_dir, "'. In RStudio use ",
